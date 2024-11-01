@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from alien_attack.scenes.central_corridor import CentralCorridor  # Update with your actual module path
+from alien_attack.scenes.central_corridor import CentralCorridor
 
 @pytest.fixture
 def central_corridor():
