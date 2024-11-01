@@ -1,28 +1,41 @@
+import pytest
+from unittest.mock import patch
 from alien_attack.scenes.the_bridge import TheBridge
 
-def test_the_bridge_initial_state():
-    scene = TheBridge()
-    result = scene.enter()
-    assert result["scene"] == "the_bridge"
-    assert "You crawl through the vent shafts for what feels like eternity" in result["message"]
-    assert "choices" in result
-    assert result["choices"] == ["shoot", "activate the escape pods"]
+@pytest.fixture
+def the_bridge():
+    return TheBridge()
 
-def test_the_bridge_shoot_action():
-    scene = TheBridge()
-    result = scene.enter(action="shoot")
-    assert result["scene"] == "death"
-    assert "You unload your laser gun into the alien queen" in result["message"]
+def test_shoot_action(the_bridge, capsys):
+    with patch("builtins.input", return_value="shoot"):
+        result = the_bridge.enter()
+        captured = capsys.readouterr()
 
-def test_the_bridge_activate_escape_pods_action():
-    scene = TheBridge()
-    result = scene.enter(action="activate the escape pods")
-    assert result["scene"] == "escape_pod"
-    assert "You fire your laser gun at the fire detectors" in result["message"]
+        assert "You unload your laser gun into the alien queen" in captured.out
+        assert result == 'death'
 
-def test_the_bridge_invalid_action():
-    scene = TheBridge()
-    result = scene.enter(action="invalid_action")
-    assert result["scene"] == "the_bridge"
-    assert result["message"] == "DOES NOT COMPUTE! Try again."
-    assert result["choices"] == ["shoot", "activate the escape pods"]
+def test_activate_action(the_bridge, capsys):
+    with patch("builtins.input", return_value="activate"):
+        result = the_bridge.enter()
+        captured = capsys.readouterr()
+
+        assert "You fire your laser gun at the fire detectors" in captured.out
+        assert result == 'escape_pod'
+
+def test_invalid_action_then_shoot(the_bridge, capsys):
+    with patch("builtins.input", side_effect=["invalid", "shoot"]):
+        result = the_bridge.enter()
+        captured = capsys.readouterr()
+
+        assert "DOES NOT COMPUTE! Try again." in captured.out
+        assert "You unload your laser gun into the alien queen" in captured.out
+        assert result == 'death'
+
+def test_invalid_action_then_activate(the_bridge, capsys):
+    with patch("builtins.input", side_effect=["invalid", "activate"]):
+        result = the_bridge.enter()
+        captured = capsys.readouterr()
+
+        assert "DOES NOT COMPUTE! Try again." in captured.out
+        assert "You fire your laser gun at the fire detectors" in captured.out
+        assert result == 'escape_pod'
