@@ -6,8 +6,7 @@ from alien_attack.scenes.laser_weapon_armory import LaserWeaponArmory
 from alien_attack.scenes.the_bridge import TheBridge
 
 
-class Map(object):
-
+class Map:
     scenes = {
         'central_corridor': CentralCorridor(),
         'laser_weapon_armory': LaserWeaponArmory(),
@@ -20,9 +19,9 @@ class Map(object):
     def __init__(self, start_scene):
         self.start_scene = start_scene
 
+    def opening_scene(self):
+        return self.next_scene(self.start_scene)
+
     def next_scene(self, scene_name):
         val = Map.scenes.get(scene_name)
         return val
-    
-    def opening_scene(self):
-        return self.next_scene(self.start_scene)
