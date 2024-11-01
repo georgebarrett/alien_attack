@@ -13,7 +13,6 @@ class CentralCorridor(Scene):
 
         action = input('Choose an action (shoot, run, inspect)> ').strip()
 
-        # Handling the actions as separate methods for modularity
         if action == 'shoot':
             return self.shoot()
         elif action == 'run':
