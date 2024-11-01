@@ -3,9 +3,9 @@ from .base_scene import Scene
 
 class Death(Scene):
     quips = [
-        'Look what you have done \n',
-        'You have gone and got yourself dead \n',
-        'Who is going to pay the extortionate energy bills now \n'
+        'GAME OVER \n',
+        'THE ALIEN HAS GOT YOU \n',
+        'YOU HAVE DIED \n'
     ]
 
     def enter(self):
