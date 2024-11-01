@@ -7,8 +7,18 @@ class Engine:
         last_scene = self.scene_map.next_scene('finished')
 
         while current_scene != last_scene:
-            next_scene_name = current_scene.enter()
+            scene_data = current_scene.enter()
+            print(scene_data["message"])
+
+            if "choices" in scene_data:
+                action = input(f"Choose an action {scene_data['choices']}: ")
+            else:
+                action = None
+
+            scene_data = current_scene.enter(action)
+            next_scene_name = scene_data["scene"]
             current_scene = self.scene_map.next_scene(next_scene_name)
 
-        # Run the final scene
-        current_scene.enter()
+        final_scene_data = current_scene.enter()
+        print(final_scene_data["message"])
+        
