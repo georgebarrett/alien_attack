@@ -1,24 +1,47 @@
 import pytest
+from unittest.mock import patch
 from alien_attack.scenes.escape_pod import EscapePod
 
-def test_escape_pod_initial_state():
-    scene = EscapePod()
-    result = scene.enter()
-    assert result["scene"] == "escape_pod"
-    assert "You rush through the ship desperately trying to make it to the escape pod" in result["message"]
-    assert "pod_numbers" in result
-    assert result["pod_numbers"] == list(range(1, 6))
+@pytest.fixture
+def escape_pod():
+    return EscapePod()
 
-def test_escape_pod_correct_guess(monkeypatch):
-    scene = EscapePod()
-    monkeypatch.setattr(scene, "good_pod", 3)
-    result = scene.enter(guess="3")
-    assert result["scene"] == "finished"
-    assert "You jump into pod 3 and hit the eject button" in result["message"]
+def test_correct_pod_choice(escape_pod, capsys):
+    with patch("alien_attack.scenes.escape_pod.randint", return_value=1):
+        with patch("builtins.input", return_value="1"):
+            result = escape_pod.enter()
+            captured = capsys.readouterr()
 
-def test_escape_pod_incorrect_guess(monkeypatch):
-    scene = EscapePod()
-    monkeypatch.setattr(scene, "good_pod", 3)
-    result = scene.enter(guess="2")
-    assert result["scene"] == "death"
-    assert "You jump into pod 2 and hit the eject button" in result["message"]
+            assert "You jump into pod 1 and hit the eject button." in captured.out
+            assert "The pod easily slides out into space heading to Earth" in captured.out
+            assert result == 'finished'
+
+def test_incorrect_pod_choice(escape_pod, capsys):
+    with patch("alien_attack.scenes.escape_pod.randint", return_value=1):
+        with patch("builtins.input", return_value="2"):
+            result = escape_pod.enter()
+            captured = capsys.readouterr()
+            
+            assert "You jump into pod 2 and hit the eject button. Nothing happens." in captured.out
+            assert "The Queen reaches you, and you pass out from fear." in captured.out
+            assert result == 'death'
+
+def test_invalid_input_then_correct_choice(escape_pod, capsys):
+    with patch("alien_attack.scenes.escape_pod.randint", return_value=1):
+        with patch("builtins.input", side_effect=["invalid", "1"]):
+            result = escape_pod.enter()
+            captured = capsys.readouterr()
+            
+            assert "DOES NOT COMPUTE! Please enter a valid pod number." in captured.out
+            assert "You jump into pod 1 and hit the eject button." in captured.out
+            assert result == 'finished'
+
+def test_invalid_input_then_incorrect_choice(escape_pod, capsys):
+    with patch("alien_attack.scenes.escape_pod.randint", return_value=1):
+        with patch("builtins.input", side_effect=["invalid", "2"]):
+            result = escape_pod.enter()
+            captured = capsys.readouterr()
+            
+            assert "DOES NOT COMPUTE! Please enter a valid pod number." in captured.out
+            assert "You jump into pod 2 and hit the eject button. Nothing happens." in captured.out
+            assert result == 'death'
