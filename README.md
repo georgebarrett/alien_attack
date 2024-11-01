@@ -27,3 +27,7 @@ whilst still in the terminal run: python main.py
 
 follow the prompts
 and press control-c to exit if it is too tense!
+
+# testing
+
+in the terminal, cd into alien_attack and run: pytest
