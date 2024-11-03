@@ -46,7 +46,7 @@ i am pleased i followed industry standards like creating a virtual environment, 
 i found following a TDD approach difficult at times. especially as i wanted to follow a top down approach with making the game
 i found that i was returning things rather than 'putsing' them to the console, this lead to rewriting tests and methods
 i did not check the terminal enough to ensure i was getting the right outputs. upon reflection this was due concentrating too much on writing code
-the testing was challenging
+the testing was challenging, especialy engine.py
 i think my mindset was one of a software developer and not a game developer
 usually i write a test, run it red, make the method/function, run the test green, then commit. i found i lost this pattern at times. maybe due to it being a game and not a web app
 
@@ -55,4 +55,4 @@ usually i write a test, run it red, make the method/function, run the test green
 i love the potential that working with data has
 i would have liked to introduce more scenes into the game with Codewars Kata esq problems
 the output in the console could look neater
-more robust test coverage and different types of tests eg, integration
+more robust test coverage
